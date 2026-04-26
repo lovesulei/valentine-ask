@@ -22,40 +22,72 @@ envelope.addEventListener("click", () => {
 
 // Logic to move the NO btn
 
-noBtn.addEventListener("mouseover", () => {
-    const min = 200;
-    const max = 200;
+let currentX = 0;
+let currentY = 0;
 
-    const distance = Math.random() * (max - min) + min;
-    const angle = Math.random() * Math.PI * 2;
+function moveButton() {
+    const btn = noBtn;
 
-    const moveX = Math.cos(angle) * distance;
-    const moveY = Math.sin(angle) * distance;
+    const btnRect = btn.getBoundingClientRect();
 
-    noBtn.style.transition = "transform 0.3s ease";
-    noBtn.style.transform = `translate(${moveX}px, ${moveY}px)`;
+    const padding = 20;
+
+    const maxX = window.innerWidth - btnRect.width - padding;
+    const maxY = window.innerHeight - btnRect.height - padding;
+
+    const minX = padding;
+    const minY = padding;
+
+    // Target position (absolute screen)
+    const targetX = Math.random() * (maxX - minX) + minX;
+    const targetY = Math.random() * (maxY - minY) + minY;
+
+    // Convert to relative movement (delta)
+    const deltaX = targetX - btnRect.left;
+    const deltaY = targetY - btnRect.top;
+
+    currentX += deltaX;
+    currentY += deltaY;
+
+    btn.style.transition = "transform 0.3s ease";
+    btn.style.transform = `translate(${currentX}px, ${currentY}px)`;
+}
+
+// Desktop
+noBtn.addEventListener("mouseover", moveButton);
+
+// Mobile
+noBtn.addEventListener("touchstart", (e) => {
+    e.preventDefault();
+    moveButton();
+});
+
+// Click fallback
+noBtn.addEventListener("click", (e) => {
+    e.preventDefault();
+    moveButton();
 });
 
 // Logic to make YES btn to grow
 
-// let yesScale = 1;
+let yesScale = 1;
 
-// yesBtn.style.position = "relative"
-// yesBtn.style.transformOrigin = "center center";
-// yesBtn.style.transition = "transform 0.3s ease";
+ yesBtn.style.position = "relative"
+yesBtn.style.transformOrigin = "center center";
+ yesBtn.style.transition = "transform 0.3s ease";
 
-// noBtn.addEventListener("click", () => {
-//     yesScale += 2;
+noBtn.addEventListener("click", () => {
+     yesScale += 2;
 
-//     if (yesBtn.style.position !== "fixed") {
-//         yesBtn.style.position = "fixed";
-//         yesBtn.style.top = "50%";
-//         yesBtn.style.left = "50%";
-//         yesBtn.style.transform = `translate(-50%, -50%) scale(${yesScale})`;
-//     }else{
-//         yesBtn.style.transform = `translate(-50%, -50%) scale(${yesScale})`;
-//     }
-// });
+    if (yesBtn.style.position !== "fixed") {
+        yesBtn.style.position = "fixed";
+         yesBtn.style.top = "50%";      
+        yesBtn.style.left = "50%";
+         yesBtn.style.transform = `translate(-50%, -50%) scale(${yesScale})`;
+     }else{
+         yesBtn.style.transform = `translate(-50%, -50%) scale(${yesScale})`;
+     }
+ });
 
 // YES is clicked
 
